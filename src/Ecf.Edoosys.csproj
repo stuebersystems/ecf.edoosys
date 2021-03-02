@@ -14,8 +14,8 @@
 
   <ItemGroup>
     <PackageReference Include="Enbrea.Csv" Version="0.1.0" />
-    <PackageReference Include="Enbrea.Ecf" Version="0.1.2" />
-    <PackageReference Include="Enbrea.Edoosys.Db" Version="0.1.1-develop.2" />
+    <PackageReference Include="Enbrea.Ecf" Version="0.1.3" />
+    <PackageReference Include="Enbrea.Edoosys.Db" Version="0.1.1" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
   </ItemGroup>
 
