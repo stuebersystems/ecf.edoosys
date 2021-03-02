@@ -1,0 +1,96 @@
+
+pool:
+  vmImage: 'windows-2019'
+
+variables:
+- group: 'dotnet-config'
+- group: 'github-config'
+
+steps:
+- checkout: self
+  persistCredentials: true
+- task: DownloadSecureFile@1
+  displayName: 'Download Code Signing certificate'
+  name: Certificate
+  inputs:
+    secureFile: cert.pfx
+- task: PowerShell@2
+  displayName: 'Calculate Version Number'
+  inputs:
+    filePath: 'azure-gitversion.ps1'
+    failOnStderr: true
+    pwsh: true
+- task: Assembly-Info-NetCore@2
+  displayName: 'Apply Assembly Infos'
+  inputs:
+    Path: '$(Build.SourcesDirectory)'
+    FileNames: '**/*.csproj'
+    InsertAttributes: true
+    FileEncoding: 'auto'
+    WriteBOM: false
+    VersionNumber: '$(MajorVersion).$(MinorVersion).$(PatchVersion).$(Build.BuildId)'
+    FileVersionNumber: '$(MajorVersion).$(MinorVersion).$(PatchVersion).$(Build.BuildId)'
+    InformationalVersion: '$(SemVersion)'
+    LogLevel: 'verbose'
+    FailOnWarning: false
+- task: UseDotNet@2
+  displayName: 'Install .NET SDK'
+  inputs:
+    packageType: sdk
+    version: 3.x
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+- task: DotNetCoreCLI@2
+  displayName: 'Build'
+  inputs:
+    command: 'build'
+    projects: '*.sln'
+    arguments: '-c $(BuildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: 'Publish'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: '$(Build.SourcesDirectory)/src/*.csproj'
+    arguments: '-c $(BuildConfiguration)'
+    zipAfterPublish: false
+    modifyOutputPath: false
+- task: PowerShell@2
+  displayName: 'Sign'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $pswd = ConvertTo-SecureString $(CertificatePassword) -AsPlainText -Force
+      $cert = Get-PfxCertificate -FilePath $(Certificate.secureFilePath) -Password $pswd
+      Set-AuthenticodeSignature -FilePath $(Build.SourcesDirectory)/src/bin/$(BuildConfiguration)/netcoreapp3.1/publish/Ecf.Edoosys.dll -Certificate $cert -HashAlgorithm SHA256 -TimestampServer http://timestamp.digicert.com
+    pwsh: true
+- task: ArchiveFiles@2
+  displayName: 'Create ZIP archive'
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)/src/bin/$(BuildConfiguration)/netcoreapp3.1/publish'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/EcfEdoosys-$(SemVersion).zip'
+    replaceExistingArchive: true
+- task: PowerShell@2
+  displayName: 'Push to GitHub'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  inputs:
+    targetType: 'inline'
+    script: |
+      git remote add github https://$(PAT)@github.com/stuebersystems/ecf.edoosys.git
+      git fetch github
+      git checkout .
+      git push github HEAD:main
+      git push --tags github HEAD:main
+    pwsh: true
+- task: GitHubRelease@1
+  displayName: 'Create GitHub Release'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  inputs:
+    gitHubConnection: 'stuebersystems'
+    repositoryName: 'stuebersystems/ecf.edoosys'
+    action: 'create'
+    target: '$(Build.SourceVersion)'
+    tagSource: 'gitTag'
+    tagPattern: 'v-[1-9]*\S*'
+    addChangeLog: false

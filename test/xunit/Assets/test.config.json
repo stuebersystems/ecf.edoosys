@@ -1,0 +1,31 @@
+﻿{
+  "Edoosys": {
+    "EcfExport": {
+      "TargetFolderName": "",
+      "SourceProvider": "Csv",
+      "SourceFileName": "",
+      "Files": [
+        {
+          "Name": "Subjects",
+          "Headers": [ "Id", "Code" ]
+        },
+        {
+          "Name": "Students",
+          "Headers": [ "Id", "LastName", "FirstName", "Gender", "Birthdate" ]
+        },
+        {
+          "Name": "SchoolClasses"
+        },
+        {
+          "Name": "StudentSubjects"
+        },
+        {
+          "Name": "StudentSchoolClassAttendances"
+        },
+        {
+          "Name": "Teachers"
+        }
+      ]
+    }
+  }
+}

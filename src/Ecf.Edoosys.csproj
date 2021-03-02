@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Copyright>© 2021 STÜBER SYSTEMS GmbH</Copyright>
+    <Product>ECF Tool for edoo.sys</Product>
+    <Company>STÜBER SYSTEMS GmbH</Company>
+    <Version>0.0.1</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Description>Tool for generating ECF files from edoo.sys</Description>
+    <Authors>STÜBER SYSTEMS GmbH</Authors>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Enbrea.Csv" Version="0.1.0" />
+    <PackageReference Include="Enbrea.Ecf" Version="0.1.2" />
+    <PackageReference Include="Enbrea.Edoosys.Db" Version="0.1.1-develop.2" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

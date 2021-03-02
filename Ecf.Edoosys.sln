@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E3709B90-6BE1-4247-B37C-BFCADF81CC18}") = "Ecf.Edoosys", "src\Ecf.Edoosys.csproj", "{0E841E07-D3BD-44EC-9936-0BE952A53F37}"
+EndProject
+Project("{E3709B90-6BE1-4247-B37C-BFCADF81CC18}") = "Ecf.Edoosys.XUnit", "test\xunit\Ecf.Edoosys.XUnit.csproj", "{5E756B1E-7899-46DF-978F-5722DA29CEB4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E841E07-D3BD-44EC-9936-0BE952A53F37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E841E07-D3BD-44EC-9936-0BE952A53F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E841E07-D3BD-44EC-9936-0BE952A53F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E841E07-D3BD-44EC-9936-0BE952A53F37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E756B1E-7899-46DF-978F-5722DA29CEB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E756B1E-7899-46DF-978F-5722DA29CEB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E756B1E-7899-46DF-978F-5722DA29CEB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E756B1E-7899-46DF-978F-5722DA29CEB4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EB776ADB-0737-4C7B-BFDA-5A6F12383CC4}
+	EndGlobalSection
+EndGlobal
