@@ -21,7 +21,6 @@
 
 using Enbrea.Csv;
 using Enbrea.Ecf;
-using System.Globalization;
 
 namespace Ecf.Edoosys
 {

@@ -30,7 +30,11 @@ namespace Ecf.Edoosys
 
         public CsvExportSchoolClass(CsvTableReader csvTableReader)
         {
-            if (csvTableReader.TryGetValue("Klasse / Klassengruppe", out Id))
+            if (csvTableReader.TryGetValue("Klasse", out Id))
+            {
+                Code = Id;
+            }
+            else  if (csvTableReader.TryGetValue("Klasse / Klassengruppe", out Id))
             {
                 Code = Id;
             }
