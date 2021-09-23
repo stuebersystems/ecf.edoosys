@@ -1,6 +1,6 @@
 ﻿#region ENBREA - Copyright (C) 2021 STÜBER SYSTEMS GmbH
 /*    
- *    ENBREA
+ *    ENBREA 
  *    
  *    Copyright (C) 2021 STÜBER SYSTEMS GmbH
  *
@@ -19,28 +19,39 @@
  */
 #endregion
 
-using System.CommandLine;
-using System.CommandLine.Invocation;
-using System.IO;
+using Enbrea.Ecf;
+using Enbrea.Edoosys.Db;
+using System;
 
 namespace Ecf.Edoosys
 {
-    public static class CommandDefinitions
+    /// <summary>
+    /// Data type converter
+    /// </summary>
+    public static class Converter
     {
-        public static Command Export()
+        public static Date? GetDate(DateTime? value)
         {
-            var command = new Command("export", "Exports data from a Edoosys export CSV to ECF files")
+            if (value != null)
             {
-                new Option<FileInfo>(new[] { "--config", "-c" }, "Path to existing JSON configuration file")
-                {
-                    IsRequired = true
-                },
-            };
-            command.Handler = CommandHandler.Create<FileInfo>(
-                async (config) =>
-                    await CommandHandlers.Export(config));
+                return new Date((DateTime)value);
+            }
+            return null;
+        }
 
-            return command;
+        public static EcfGender? GetGender(Gender? value)
+        {
+            if (value != null)
+            {
+                return (value) switch
+                {
+                    Gender.Male => EcfGender.Male,
+                    Gender.Female => EcfGender.Female,
+                    Gender.Diverse => EcfGender.Diverse,
+                    _ => null,
+                };
+            }
+            return null;
         }
     }
 }
