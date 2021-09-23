@@ -28,7 +28,7 @@ namespace Ecf.Edoosys
     {
         public static Guid CreateIdFromValue(string value)
         {
-            return GuidFactory.Create(GuidFactory.IsoOidNamespace, value);
+            return GuidGenerator.Create(GuidGenerator.IsoOidNamespace, value);
         }
     }
 }
