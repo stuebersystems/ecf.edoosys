@@ -249,7 +249,8 @@ namespace Ecf.Edoosys
                 await ecfTableWriter.WriteHeadersAsync(
                     EcfHeaders.StudentId,
                     EcfHeaders.SchoolClassId,
-                    EcfHeaders.SubjectId);
+                    EcfHeaders.SubjectId,
+                    EcfHeaders.TeacherId);
             }
 
             while (await csvTableReader.ReadAsync() > 0)
@@ -272,6 +273,7 @@ namespace Ecf.Edoosys
                             var subValueParts = csvLineParser.Read(subValue.Trim());
                             if (subValueParts.Length == 2)
                             {
+                                var teacherCode = subValueParts[0];
                                 var subjectCode = subValueParts[1];
 
                                 if (!string.IsNullOrEmpty(subjectCode))
@@ -279,6 +281,7 @@ namespace Ecf.Edoosys
                                     ecfTableWriter.TrySetValue(EcfHeaders.StudentId, student.Id);
                                     ecfTableWriter.TrySetValue(EcfHeaders.SchoolClassId, schoolClass.Id);
                                     ecfTableWriter.TrySetValue(EcfHeaders.SubjectId, subjectCode);
+                                    ecfTableWriter.TrySetValue(EcfHeaders.TeacherId, teacherCode);
 
                                     await ecfTableWriter.WriteAsync();
 

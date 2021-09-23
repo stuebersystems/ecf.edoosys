@@ -197,8 +197,8 @@ namespace Ecf.Edoosys
                     ecfTableWriter.TrySetValue(EcfHeaders.Id, student.Id);
                     ecfTableWriter.TrySetValue(EcfHeaders.LastName, student.Lastname);
                     ecfTableWriter.TrySetValue(EcfHeaders.FirstName, student.Firstname);
-                    ecfTableWriter.TrySetValue(EcfHeaders.Gender, student.Gender);
-                    ecfTableWriter.TrySetValue(EcfHeaders.Birthdate, student.Birthdate);
+                    ecfTableWriter.TrySetValue(EcfHeaders.Gender, Converter.GetGender(student.Gender));
+                    ecfTableWriter.TrySetValue(EcfHeaders.Birthdate, Converter.GetDate(student.Birthdate));
 
                     await ecfTableWriter.WriteAsync();
 
@@ -226,6 +226,7 @@ namespace Ecf.Edoosys
                 else
                 {
                     await ecfTableWriter.WriteHeadersAsync(
+                        EcfHeaders.Id,
                         EcfHeaders.StudentId,
                         EcfHeaders.SchoolClassId);
                 }
@@ -234,6 +235,7 @@ namespace Ecf.Edoosys
                 {
                     var schoolClassId = _config.EcfExport.NoSchoolClassGroups ? attendance.SchoolClassRootId : attendance.SchoolClassId;
 
+                    ecfTableWriter.TrySetValue(EcfHeaders.Id, GenerateKey(attendance.StudentId, schoolClassId));
                     ecfTableWriter.TrySetValue(EcfHeaders.StudentId, attendance.StudentId);
                     ecfTableWriter.TrySetValue(EcfHeaders.SchoolClassId, schoolClassId);
                     await ecfTableWriter.WriteAsync();
@@ -263,6 +265,7 @@ namespace Ecf.Edoosys
                 else
                 {
                     await ecfTableWriter.WriteHeadersAsync(
+                        EcfHeaders.Id,
                         EcfHeaders.StudentId,
                         EcfHeaders.SchoolClassId,
                         EcfHeaders.SubjectId,
@@ -272,7 +275,8 @@ namespace Ecf.Edoosys
                 await foreach (var studentSubject in edoosysDbReader.StudentSubjectsAsync(_config.EcfExport.SchoolNo, _config.EcfExport.SchoolYearCode, activeStudentsOnly: true))
                 {
                     var schoolClassId = _config.EcfExport.NoSchoolClassGroups ? studentSubject.SchoolClassRootId : studentSubject.SchoolClassId;
-                    
+
+                    ecfTableWriter.TrySetValue(EcfHeaders.Id, GenerateKey(studentSubject.StudentId, studentSubject.SubjectId, schoolClassId, studentSubject.TeacherId));
                     ecfTableWriter.TrySetValue(EcfHeaders.StudentId, studentSubject.StudentId);
                     ecfTableWriter.TrySetValue(EcfHeaders.SubjectId, studentSubject.SubjectId);
                     ecfTableWriter.TrySetValue(EcfHeaders.SchoolClassId, schoolClassId);
@@ -358,8 +362,8 @@ namespace Ecf.Edoosys
                         ecfTableWriter.TrySetValue(EcfHeaders.Code, teacher.Code);
                         ecfTableWriter.TrySetValue(EcfHeaders.LastName, teacher.Lastname);
                         ecfTableWriter.TrySetValue(EcfHeaders.FirstName, teacher.Firstname);
-                        ecfTableWriter.TrySetValue(EcfHeaders.Gender, teacher.Gender);
-                        ecfTableWriter.TrySetValue(EcfHeaders.Birthdate, teacher.Birthdate);
+                        ecfTableWriter.TrySetValue(EcfHeaders.Gender, Converter.GetGender(teacher.Gender));
+                        ecfTableWriter.TrySetValue(EcfHeaders.Birthdate, Converter.GetDate(teacher.Birthdate));
 
                         await ecfTableWriter.WriteAsync();
 
@@ -374,5 +378,17 @@ namespace Ecf.Edoosys
                 throw new Exception("No school no and/or no school year for edoo.sys database defined");
             }
         }
+
+        private Guid GenerateKey(params string[] array)
+        {
+            var csvLineBuilder = new CsvLineBuilder();
+
+            foreach (var arrayItem in array)
+            {
+                csvLineBuilder.Append(arrayItem);
+            }
+            return IdFactory.CreateIdFromValue(csvLineBuilder.ToString());
+        }
+
     }
 }

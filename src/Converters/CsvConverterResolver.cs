@@ -32,10 +32,8 @@ namespace Ecf.Edoosys
         protected override void RegisterDefaultConverters()
         {
             base.RegisterDefaultConverters();
-            AddConverter<Date?>(new CsvDateConverter());
-            AddConverter<Date>(new CsvDateConverter());
-            AddConverter<EcfGender?>(new CsvGenderConverter());
-            AddConverter<EcfGender>(new CsvGenderConverter());
+            AddConverter(typeof(Date), new CsvDateConverter());
+            AddConverter(typeof(EcfGender), new CsvGenderConverter());
         }
     }
 }

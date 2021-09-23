@@ -19,28 +19,16 @@
  */
 #endregion
 
-using System.CommandLine;
-using System.CommandLine.Invocation;
-using System.IO;
+using Enbrea.GuidFactory;
+using System;
 
 namespace Ecf.Edoosys
 {
-    public static class CommandDefinitions
+    public static class IdFactory
     {
-        public static Command Export()
+        public static Guid CreateIdFromValue(string value)
         {
-            var command = new Command("export", "Exports data from a Edoosys export CSV to ECF files")
-            {
-                new Option<FileInfo>(new[] { "--config", "-c" }, "Path to existing JSON configuration file")
-                {
-                    IsRequired = true
-                },
-            };
-            command.Handler = CommandHandler.Create<FileInfo>(
-                async (config) =>
-                    await CommandHandlers.Export(config));
-
-            return command;
+            return GuidFactory.Create(GuidFactory.IsoOidNamespace, value);
         }
     }
 }
